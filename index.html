@@ -82,7 +82,7 @@
         </header>
 
         <main class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            <aside class="lg:col-span-1">
+            <aside class="lg-col-span-1">
                 <nav id="navigation" class="sticky top-8 bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
                     <h2 class="text-lg font-semibold mb-4 px-2">Suunnitelman osiot</h2>
                     <ul></ul>
@@ -139,43 +139,43 @@
         const agentData = [
             {
                 id: 'aloitus', title: '1. Aloitus', heading: 'Tervetuloa & Aloitus', description: 'Ensimmäisessä vaiheessa agentti toivottaa käyttäjän tervetulleeksi, selittää prosessin lyhyesti ja kerää perustiedot aloitettavasta liiketoiminnasta. Tämä luo pohjan koko suunnitelmalle.',
-                questions: [{ key: 'Liiketoiminnan tyyppi', text: 'Minkä tyyppistä liiketoimintaa suunnittelet aloittavasi?' }, { key: 'Yrityksen nimi', text: 'Mikä on yrityksesi nimi (jos sinulla on jo nimi mielessä)?' }]
+                questions: [{ type: 'text', key: 'Liiketoiminnan tyyppi', text: 'Minkä tyyppistä liiketoimintaa suunnittelet aloittavasi?' }, { type: 'text', key: 'Yrityksen nimi', text: 'Mikä on yrityksesi nimi (jos sinulla on jo nimi mielessä)?' }]
             },
             {
                 id: 'liikeidea', title: '2. Liikeidea', heading: 'Liikeidea', description: 'Tässä osiossa pureudutaan ytimeen: mitä yritys myy, kenelle ja miksi se on erityinen. Agentti auttaa kirkastamaan liikeidean peruspilarit.',
-                questions: [{ key: 'Tuote/palvelu', text: 'Kuvaile yrityksesi tarjoamaa tuotetta tai palvelua lyhyesti.' }, { key: 'Ainutlaatuisuus', text: 'Mikä tekee tuotteestasi tai palvelustasi ainutlaatuisen?' }, { key: 'Kohderyhmä', text: 'Kenelle tuotteesi tai palvelusi on suunnattu (kohderyhmä)?' }]
+                questions: [{ type: 'text', key: 'Tuote/palvelu', text: 'Kuvaile yrityksesi tarjoamaa tuotetta tai palvelua lyhyesti.' }, { type: 'text', key: 'Ainutlaatuisuus', text: 'Mikä tekee tuotteestasi tai palvelustasi ainutlaatuisen?' }, { type: 'text', key: 'Kohderyhmä', text: 'Kenelle tuotteesi tai palvelusi on suunnattu (kohderyhmä)?' }]
             },
              {
                 id: 'markkina-analyysi', title: '3. Markkina-analyysi', heading: 'Markkina-analyysi', description: 'Yksikään yritys ei toimi tyhjiössä. Tässä vaiheessa agentti ohjaa yrittäjää analysoimaan kilpailukenttää ja tunnistamaan markkinan mahdollisuuksia ja trendejä.',
-                questions: [{ key: 'Kilpailijat', text: 'Ketkä ovat tärkeimmät kilpailijasi?' }, { key: 'Erottuvuustekijät', text: 'Miten yrityksesi eroaa kilpailijoista?' }, { key: 'Markkinan mahdollisuudet', text: 'Millaisia trendejä tai mahdollisuuksia markkinoilla on tällä hetkellä?' }]
+                questions: [{ type: 'text', key: 'Kilpailijat', text: 'Ketkä ovat tärkeimmät kilpailijasi?' }, { type: 'text', key: 'Erottuvuustekijät', text: 'Miten yrityksesi eroaa kilpailijoista?' }, { type: 'text', key: 'Markkinan mahdollisuudet', text: 'Millaisia trendejä tai mahdollisuuksia markkinoilla on tällä hetkellä?' }]
             },
             {
                 id: 'liiketoimintamalli', title: '4. Liiketoimintamalli', heading: 'Liiketoimintamalli', description: 'Miten yritys tekee rahaa ja mitä sen pyörittämiseen vaaditaan? Agentti auttaa määrittelemään ansaintalogiikan, tarvittavat resurssit ja käytännön toimintatavat.',
-                questions: [{ key: 'Ansaintalogiikka', text: 'Miten aiot ansaita rahaa (esim. tuotemyynti, palvelumaksu, tilausmalli)?' }, { key: 'Resurssit ja kumppanit', text: 'Millaisia keskeisiä resursseja ja kumppanuuksia tarvitset toiminnan pyörittämiseen?' }, { key: 'Toimitusprosessi', text: 'Miten tuotteen toimitus tai palvelun tuottaminen käytännössä tapahtuu?' }]
+                questions: [{ type: 'text', key: 'Ansaintalogiikka', text: 'Miten aiot ansaita rahaa (esim. tuotemyynti, palvelumaksu, tilausmalli)?' }, { type: 'text', key: 'Resurssit ja kumppanit', text: 'Millaisia keskeisiä resursseja ja kumppanuuksia tarvitset toiminnan pyörittämiseen?' }, { type: 'text', key: 'Toimitusprosessi', text: 'Miten tuotteen toimitus tai palvelun tuottaminen käytännössä tapahtuu?' }]
             },
             {
                 id: 'markkinointi', title: '5. Markkinointi ja myynti', heading: 'Markkinointi ja myynti', description: 'Loistava tuote ei myy itse itseään. Tässä osiossa agentti auttaa suunnittelemaan, miten potentiaaliset asiakkaat tavoitetaan ja miten heidät vakuutetaan.',
-                questions: [{ key: 'Asiakashankinta', text: 'Miten aiot tavoittaa ensimmäiset asiakkaasi?' }, { key: 'Markkinointikanavat', text: 'Mitkä markkinointikanavat ovat sinulle tärkeimpiä (esim. sosiaalinen media, verkkosivut, suosittelut)?' }, { key: 'Brändi-ilme', text: 'Millaisen mielikuvan ja viestin haluat brändillesi luoda?' }]
+                questions: [{ type: 'text', key: 'Asiakashankinta', text: 'Miten aiot tavoittaa ensimmäiset asiakkaasi?' }, { type: 'text', key: 'Markkinointikanavat', text: 'Mitkä markkinointikanavat ovat sinulle tärkeimpiä (esim. sosiaalinen media, verkkosivut, suosittelut)?' }, { type: 'text', key: 'Brändi-ilme', text: 'Millaisen mielikuvan ja viestin haluat brändillesi luoda?' }]
             },
             {
                 id: 'taloussuunnitelma',
                 title: '6. Taloussuunnitelma',
                 heading: 'Taloussuunnitelma',
-                description: 'Syötä tähän numeerista dataa analyysiä varten. Käytä muotoa "Kuluerä: Summa" jokaisella rivillä.',
+                description: 'Syötä tähän numeerista dataa analyysiä varten. Lisää ja poista kulueriä tarpeen mukaan.',
                 questions: [
-                    { key: 'Alkupääoma', text: 'Erittele aloituskustannukset (esim. Laitteet: 5000)' },
-                    { key: 'Kiinteät kulut', text: 'Erittele kuukausittaiset kiinteät kulut (esim. Vuokra: 1500)' },
-                    { key: 'Muuttuvat kulut', text: 'Erittele arvioidut kuukausittaiset muuttuvat kulut (esim. Materiaalit: 1000)' },
-                    { key: 'Liikevaihtotavoite', text: 'Mikä on realistinen liikevaihtotavoitteesi ensimmäisen vuoden aikana? (Syötä vain numero)' }
+                    { type: 'dynamic-list', key: 'Alkupääoma', text: 'Erittele aloituskustannukset' },
+                    { type: 'dynamic-list', key: 'Kiinteät kulut', text: 'Erittele kuukausittaiset kiinteät kulut' },
+                    { type: 'dynamic-list', key: 'Muuttuvat kulut', text: 'Erittele arvioidut kuukausittaiset muuttuvat kulut' },
+                    { type: 'number', key: 'Liikevaihtotavoite', text: 'Mikä on realistinen liikevaihtotavoitteesi ensimmäisen vuoden aikana? (€)' }
                 ]
             },
             {
                 id: 'riskit', title: '7. Riskit ja varautuminen', heading: 'Riskit ja varautuminen', description: 'Hyvään suunnitteluun kuuluu myös varautuminen vastoinkäymisiin. Viimeisessä vaiheessa agentti auttaa tunnistamaan potentiaalisia riskejä ja miettimään keinoja niiden hallintaan.',
-                questions: [{ key: 'Suurimmat riskit', text: 'Mitkä ovat kolme suurinta riskiä liiketoiminnallesi?' }, { key: 'Riskienhallinta', text: 'Miten aiot hallita tai pienentää näitä riskejä?' }]
+                questions: [{ type: 'text', key: 'Suurimmat riskit', text: 'Mitkä ovat kolme suurinta riskiä liiketoiminnallesi?' }, { type: 'text', key: 'Riskienhallinta', text: 'Miten aiot hallita tai pienentää näitä riskejä?' }]
             }
         ];
 
-        const userAnswers = {};
+        let userAnswers = {};
         let charts = {}; // To hold chart instances
 
         const navigationEl = document.getElementById('navigation').querySelector('ul');
@@ -186,29 +186,30 @@
         const generateButton = document.getElementById('ai-generate-button');
         
         // --- Chart Rendering Functions ---
+        function getFinancialDataFromAnswers() {
+            const financialAnswers = userAnswers['taloussuunnitelma'] || {};
+            const startupDataRaw = financialAnswers[0] || [];
+            const fixedDataRaw = financialAnswers[1] || [];
+            const variableDataRaw = financialAnswers[2] || [];
+            
+            const processRawData = (rawData) => {
+                const labels = rawData.map(item => item.name || '');
+                const values = rawData.map(item => parseFloat(item.value) || 0);
+                const total = values.reduce((sum, val) => sum + val, 0);
+                return { labels, values, total };
+            };
 
-        function parseFinancialData(textareaContent) {
-            if (!textareaContent) return { labels: [], values: [], total: 0 };
-            const lines = textareaContent.split('\n').filter(line => line.trim() !== '');
-            const data = { labels: [], values: [] };
-            let total = 0;
-            lines.forEach(line => {
-                const parts = line.split(':');
-                if (parts.length === 2) {
-                    const label = parts[0].trim();
-                    const value = parseFloat(parts[1].trim());
-                    if (label && !isNaN(value)) {
-                        data.labels.push(label);
-                        data.values.push(value);
-                        total += value;
-                    }
-                }
-            });
-            return { ...data, total };
+            return {
+                startupData: processRawData(startupDataRaw),
+                fixedCosts: processRawData(fixedDataRaw),
+                variableCosts: processRawData(variableDataRaw),
+                yearlyRevenueGoal: parseFloat(financialAnswers[3] || '0')
+            };
         }
 
         function createOrUpdateChart(chartId, type, data, options) {
-            const ctx = document.getElementById(chartId).getContext('2d');
+            const ctx = document.getElementById(chartId)?.getContext('2d');
+            if (!ctx) return;
             if (charts[chartId]) {
                 charts[chartId].destroy();
             }
@@ -216,24 +217,13 @@
         }
 
         function updateAllCharts() {
-            const financialData = userAnswers['taloussuunnitelma'] || {};
+            const { startupData, fixedCosts, variableCosts, yearlyRevenueGoal } = getFinancialDataFromAnswers();
             
-            // 1. Startup Costs Chart
-            const startupData = parseFinancialData(financialData[0] || '');
             createOrUpdateChart('startupCostsChart', 'doughnut', {
                 labels: startupData.labels,
-                datasets: [{
-                    label: 'Aloituskustannukset',
-                    data: startupData.values,
-                    backgroundColor: ['#D4A373', '#F4EFE7', '#3D352E', '#E6CBA8', '#9B7F62'],
-                    borderColor: '#FFFFFF',
-                    borderWidth: 2
-                }]
+                datasets: [{ data: startupData.values, backgroundColor: ['#D4A373', '#F4EFE7', '#3D352E', '#E6CBA8', '#9B7F62'], borderColor: '#FFFFFF', borderWidth: 2 }]
             }, { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } });
 
-            // 2. Monthly Costs Chart
-            const fixedCosts = parseFinancialData(financialData[1] || '');
-            const variableCosts = parseFinancialData(financialData[2] || '');
             createOrUpdateChart('monthlyCostsChart', 'bar', {
                 labels: ['Kuukausittaiset kulut'],
                 datasets: [
@@ -242,16 +232,12 @@
                 ]
             }, { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } } });
 
-            // 3. Projection Chart
-            const yearlyRevenueGoal = parseFloat(financialData[3] || '0');
             const monthlyRevenue = yearlyRevenueGoal / 12;
             const totalMonthlyCosts = fixedCosts.total + variableCosts.total;
-            
             const projection = { labels: [], revenues: [], profits: [] };
             for (let i = 1; i <= 12; i++) {
                 projection.labels.push(`Kuukausi ${i}`);
-                // Simple linear projection for revenue
-                const currentRevenue = (monthlyRevenue / 12) * i * 2; // Assume ramp-up
+                const currentRevenue = (monthlyRevenue / 12) * i * 2;
                 projection.revenues.push(currentRevenue);
                 projection.profits.push(currentRevenue - totalMonthlyCosts);
             }
@@ -269,35 +255,47 @@
         function renderContent(sectionId) {
             const sectionData = agentData.find(item => item.id === sectionId);
             if (!sectionData) return;
-
             if (!userAnswers[sectionId]) userAnswers[sectionId] = {};
             
             const questionsHtml = sectionData.questions.map((q, index) => {
-                const savedAnswer = userAnswers[sectionId][index] || '';
-                const isTall = sectionId === 'taloussuunnitelma';
-                return `
-                    <div class="mb-6">
-                        <label for="textarea-${sectionId}-${index}" class="block font-medium text-gray-800 mb-2">${q.text}</label>
-                        <textarea id="textarea-${sectionId}-${index}"
-                                  data-section-id="${sectionId}"
-                                  data-question-index="${index}"
-                                  class="mt-1 w-full p-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-[#E6CBA8] focus:border-[#D4A373] transition ${isTall ? 'h-40' : 'h-28'}"
-                                  placeholder="${q.key === 'Liikevaihtotavoite' ? 'Esim: 120000' : 'Esim:\nLaitteet: 5000\nMarkkinointi: 2000'}">${savedAnswer}</textarea>
+                const savedAnswer = userAnswers[sectionId][index] || (q.type === 'dynamic-list' ? [] : '');
+                
+                if (q.type === 'dynamic-list') {
+                    let itemsHtml = savedAnswer.map((item, itemIndex) => `
+                        <div class="flex items-center gap-2 mb-2 dynamic-item-row" data-item-index="${itemIndex}">
+                            <input type="text" placeholder="Kuluerän nimi" class="flex-grow p-2 border rounded-md" value="${item.name || ''}" data-type="name">
+                            <input type="number" placeholder="Summa (€)" class="w-32 p-2 border rounded-md" value="${item.value || ''}" data-type="value">
+                            <button class="remove-item-btn p-2 text-red-500 hover:text-red-700">&times;</button>
+                        </div>
+                    `).join('');
+                    
+                    return `
+                        <div class="mb-6" data-question-index="${index}" data-section-id="${sectionId}">
+                            <label class="block font-medium text-gray-800 mb-2">${q.text}</label>
+                            <div class="dynamic-list-container space-y-2">${itemsHtml}</div>
+                            <button class="add-item-btn mt-2 text-sm text-[#D4A373] hover:text-[#c8935a] font-semibold">+ Lisää kuluerä</button>
+                        </div>`;
+                } else if (q.type === 'number') {
+                     return `<div class="mb-6">
+                        <label for="input-${sectionId}-${index}" class="block font-medium text-gray-800 mb-2">${q.text}</label>
+                        <input type="number" id="input-${sectionId}-${index}" data-section-id="${sectionId}" data-question-index="${index}" class="mt-1 w-full p-3 rounded-md border" value="${savedAnswer}" placeholder="Esim: 120000">
                     </div>`;
+                } else { // type: 'text'
+                    return `<div class="mb-6">
+                        <label for="textarea-${sectionId}-${index}" class="block font-medium text-gray-800 mb-2">${q.text}</label>
+                        <textarea id="textarea-${sectionId}-${index}" data-section-id="${sectionId}" data-question-index="${index}" class="mt-1 w-full p-3 rounded-md border h-28">${savedAnswer}</textarea>
+                    </div>`;
+                }
             }).join('');
 
-            contentEl.innerHTML = `
-                <div class="p-6 md:p-8 rounded-lg content-card animate-fade-in">
-                    <h2 class="text-2xl font-bold mb-2">${sectionData.heading}</h2>
-                    <p class="text-gray-600 mb-8">${sectionData.description}</p>
-                    <div class="space-y-4">${questionsHtml}</div>
-                </div>`;
+            contentEl.innerHTML = `<div class="p-6 md:p-8 rounded-lg content-card animate-fade-in">
+                <h2 class="text-2xl font-bold mb-2">${sectionData.heading}</h2>
+                <p class="text-gray-600 mb-8">${sectionData.description}</p>
+                <div class="space-y-4">${questionsHtml}</div>
+            </div>`;
             
-            saveAreaEl.innerHTML = `
-                <span id="save-feedback-${sectionId}" class="mr-4 text-green-600 font-medium opacity-0">Tiedot tallennettu! ✔</span>
-                <button id="save-button-${sectionId}" class="bg-[#D4A373] text-white font-bold py-2 px-6 rounded-lg">
-                    Tallenna vastaukset
-                </button>`;
+            saveAreaEl.innerHTML = `<span id="save-feedback-${sectionId}" class="mr-4 text-green-600 font-medium opacity-0">Tiedot tallennettu! ✔</span>
+                <button id="save-button-${sectionId}" class="bg-[#D4A373] text-white font-bold py-2 px-6 rounded-lg">Tallenna vastaukset</button>`;
         }
         
         async function callAiAgent() {
@@ -312,29 +310,27 @@
             agentData.forEach(section => {
                 rawAnswersText += `\n### ${section.title}\n`;
                 section.questions.forEach((question, index) => {
-                    const answer = userAnswers[section.id]?.[index] || 'Ei vastausta';
-                    rawAnswersText += `- **${question.key}:** ${answer}\n`;
+                    const answer = userAnswers[section.id]?.[index];
+                    let formattedAnswer = 'Ei vastausta';
+                    if (Array.isArray(answer)) {
+                        formattedAnswer = answer.map(item => `${item.name || 'Nimetön'}: ${item.value || 0}`).join(', ');
+                    } else if (answer) {
+                        formattedAnswer = answer;
+                    }
+                    rawAnswersText += `- **${question.key}:** ${formattedAnswer}\n`;
                 });
             });
 
             const systemPrompt = "You are an expert business consultant. Your task is to create a clear, professional, and well-structured business plan based on the user's provided answers. Formulate the answers into a coherent and flowing text, not just a list of the answers. Use Markdown for formatting. The response must be in Finnish.";
             const userPrompt = `Create a comprehensive business plan from the following raw data:\n\n${rawAnswersText}`;
 
-            const payload = {
-                contents: [{ parts: [{ text: userPrompt }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] },
-            };
-
             try {
-                const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                if (!response.ok) {
-                    const errorBody = await response.text();
-                    throw new Error(`API error: ${response.status} - ${errorBody}`);
-                }
+                const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: userPrompt }] }], systemInstruction: { parts: [{ text: systemPrompt }] } }) });
+                if (!response.ok) throw new Error(`API error: ${response.status} - ${await response.text()}`);
                 const result = await response.json();
                 const generatedText = result.candidates?.[0]?.content?.parts?.[0]?.text;
                 finalPlanEl.textContent = generatedText || 'API palautti tyhjän vastauksen.';
-                updateAllCharts(); // AUTOMATICALLY UPDATE CHARTS ON SUCCESS
+                updateAllCharts();
             } catch (error) {
                 console.error('Error calling Gemini API:', error);
                 finalPlanEl.textContent = `Tapahtui virhe: ${error.message}`;
@@ -352,9 +348,7 @@
                 link.className = 'nav-item block w-full text-left px-4 py-3 rounded-md';
                 link.dataset.id = item.id;
                 link.textContent = item.title;
-                if (index === 0) {
-                    link.classList.add('active');
-                }
+                if (index === 0) link.classList.add('active');
                 li.appendChild(link);
                 navigationEl.appendChild(li);
             });
@@ -362,7 +356,7 @@
             navigationEl.addEventListener('click', (e) => {
                 e.preventDefault();
                 const target = e.target.closest('.nav-item');
-                if (target && target.dataset.id) {
+                if (target?.dataset.id) {
                     document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
                     target.classList.add('active');
                     renderContent(target.dataset.id);
@@ -370,17 +364,53 @@
             });
             
             mainContentAreaEl.addEventListener('input', (e) => {
-                if (e.target.tagName === 'TEXTAREA' && e.target.dataset.sectionId) {
-                    const { sectionId, questionIndex } = e.target.dataset;
-                    if (!userAnswers[sectionId]) userAnswers[sectionId] = {};
-                    userAnswers[sectionId][questionIndex] = e.target.value;
+                const target = e.target;
+                const sectionEl = target.closest('[data-section-id]');
+                if (!sectionEl) return;
+                
+                const { sectionId, questionIndex } = target.closest('[data-question-index]').dataset;
+                if (!userAnswers[sectionId]) userAnswers[sectionId] = {};
+                
+                if (target.closest('.dynamic-list-container')) {
+                    const listContainer = target.closest('.dynamic-list-container');
+                    const items = [];
+                    listContainer.querySelectorAll('.dynamic-item-row').forEach(row => {
+                        const name = row.querySelector('[data-type="name"]').value;
+                        const value = row.querySelector('[data-type="value"]').value;
+                        items.push({ name, value });
+                    });
+                    userAnswers[sectionId][questionIndex] = items;
+                } else {
+                    userAnswers[sectionId][questionIndex] = target.value;
                 }
             });
 
             mainContentAreaEl.addEventListener('click', (e) => {
-                if (e.target.tagName === 'BUTTON' && e.target.id.startsWith('save-button-')) {
+                const target = e.target;
+                if (target.closest('.add-item-btn')) {
                     e.preventDefault();
-                    const feedbackEl = document.getElementById(e.target.id.replace('save-button-','save-feedback-'));
+                    const container = target.previousElementSibling;
+                    const newRow = document.createElement('div');
+                    newRow.className = 'flex items-center gap-2 mb-2 dynamic-item-row';
+                    newRow.innerHTML = `
+                        <input type="text" placeholder="Kuluerän nimi" class="flex-grow p-2 border rounded-md" data-type="name">
+                        <input type="number" placeholder="Summa (€)" class="w-32 p-2 border rounded-md" data-type="value">
+                        <button class="remove-item-btn p-2 text-red-500 hover:text-red-700">&times;</button>`;
+                    container.appendChild(newRow);
+                }
+                
+                if (target.closest('.remove-item-btn')) {
+                    e.preventDefault();
+                    const row = target.closest('.dynamic-item-row');
+                    const container = row.parentElement;
+                    row.remove();
+                    // Manually trigger input event on container to re-save data
+                    container.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+
+                if (target.tagName === 'BUTTON' && target.id.startsWith('save-button-')) {
+                    e.preventDefault();
+                    const feedbackEl = document.getElementById(target.id.replace('save-button-','save-feedback-'));
                     if (feedbackEl) {
                         feedbackEl.classList.remove('opacity-0');
                         setTimeout(() => feedbackEl.classList.add('opacity-0'), 2500);
