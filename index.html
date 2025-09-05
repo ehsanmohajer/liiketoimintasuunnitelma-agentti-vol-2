@@ -123,7 +123,7 @@
              <div class="flex flex-wrap justify-between items-center gap-4 mb-4">
                 <h2 class="text-2xl font-bold">Agentin luoma liiketoimintasuunnitelma</h2>
                 <button id="ai-generate-button" class="ai-button font-bold py-2 px-6 rounded-lg flex items-center">
-                    <svg class="w-5 h-5 mr-2" xmlns="http://www.w.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M11.41 1.583A1 1 0 0010.5 1h-1a1 1 0 00-.91.583L7.175 5H4a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1V6a1 1 0 00-1-1h-3.175l-1.415-3.417zM10 12a3 3 0 100-6 3 3 0 000 6z" /><path d="M12.5 4a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /></svg>
+                    <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M11.41 1.583A1 1 0 0010.5 1h-1a1 1 0 00-.91.583L7.175 5H4a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1V6a1 1 0 00-1-1h-3.175l-1.415-3.417zM10 12a3 3 0 100-6 3 3 0 000 6z" /><path d="M12.5 4a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /></svg>
                     Luo suunnitelma tekoälyllä
                 </button>
              </div>
@@ -281,8 +281,10 @@
                 const isTall = sectionId === 'taloussuunnitelma';
                 return `
                     <div class="mb-6">
-                        <label for="${sectionId}-${index}" class="block font-medium text-gray-800 mb-2">${q.text}</label>
-                        <textarea id="${sectionId}-${index}"
+                        <label for="textarea-${sectionId}-${index}" class="block font-medium text-gray-800 mb-2">${q.text}</label>
+                        <textarea id="textarea-${sectionId}-${index}"
+                                  data-section-id="${sectionId}"
+                                  data-question-index="${index}"
                                   class="mt-1 w-full p-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-[#E6CBA8] focus:border-[#D4A373] transition ${isTall ? 'h-40' : 'h-28'}"
                                   placeholder="${q.key === 'Liikevaihtotavoite' ? 'Esim: 120000' : 'Esim:\nLaitteet: 5000\nMarkkinointi: 2000'}">${savedAnswer}</textarea>
                     </div>`;
@@ -300,13 +302,6 @@
                 <button id="save-button-${sectionId}" class="bg-[#D4A373] text-white font-bold py-2 px-6 rounded-lg">
                     Tallenna vastaukset
                 </button>`;
-            
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-                if (item.dataset.id === sectionId) {
-                    item.classList.add('active');
-                }
-            });
         }
         
         async function callAiAgent() {
@@ -348,28 +343,38 @@
                 finalPlanEl.textContent = `Tapahtui virhe: ${error.message}`;
             } finally {
                  generateButton.disabled = false;
-                 generateButton.innerHTML = `<svg class="w-5 h-5 mr-2" xmlns="http://www.w.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M11.41 1.583A1 1 0 0010.5 1h-1a1 1 0 00-.91.583L7.175 5H4a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1V6a1 1 0 00-1-1h-3.175l-1.415-3.417zM10 12a3 3 0 100-6 3 3 0 000 6z" /><path d="M12.5 4a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /></svg>Luo suunnitelma tekoälyllä`;
+                 generateButton.innerHTML = `<svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M11.41 1.583A1 1 0 0010.5 1h-1a1 1 0 00-.91.583L7.175 5H4a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1V6a1 1 0 00-1-1h-3.175l-1.415-3.417zM10 12a3 3 0 100-6 3 3 0 000 6z" /><path d="M12.5 4a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /></svg>Luo suunnitelma tekoälyllä`;
             }
         }
 
         function init() {
-            agentData.forEach(item => {
+            agentData.forEach((item, index) => {
                 const li = document.createElement('li');
-                li.innerHTML = `<a href="#" class="nav-item block w-full text-left px-4 py-3 rounded-md" data-id="${item.id}">${item.title}</a>`;
+                const link = document.createElement('a');
+                link.href = '#';
+                link.className = 'nav-item block w-full text-left px-4 py-3 rounded-md';
+                link.dataset.id = item.id;
+                link.textContent = item.title;
+                if (index === 0) {
+                    link.classList.add('active');
+                }
+                li.appendChild(link);
                 navigationEl.appendChild(li);
             });
 
             navigationEl.addEventListener('click', (e) => {
                 e.preventDefault();
                 const target = e.target.closest('.nav-item');
-                if (target) renderContent(target.dataset.id);
+                if (target && target.dataset.id) {
+                    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+                    target.classList.add('active');
+                    renderContent(target.dataset.id);
+                }
             });
             
             mainContentAreaEl.addEventListener('input', (e) => {
-                if (e.target.tagName === 'TEXTAREA') {
-                    const idParts = e.target.id.split('-');
-                    const questionIndex = idParts.pop();
-                    const sectionId = idParts.join('-');
+                if (e.target.tagName === 'TEXTAREA' && e.target.dataset.sectionId) {
+                    const { sectionId, questionIndex } = e.target.dataset;
                     if (!userAnswers[sectionId]) userAnswers[sectionId] = {};
                     userAnswers[sectionId][questionIndex] = e.target.value;
                 }
