@@ -95,14 +95,25 @@
             </div>
         </main>
         
+        <section id="final-output-section" class="mt-12 p-6 md:p-8 rounded-lg content-card">
+             <div class="flex flex-wrap justify-between items-center gap-4 mb-4">
+                <h2 class="text-2xl font-bold">Agentin luoma liiketoimintasuunnitelma</h2>
+                <button id="ai-generate-button" class="ai-button font-bold py-2 px-6 rounded-lg flex items-center">
+                    <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M11.41 1.583A1 1 0 0010.5 1h-1a1 1 0 00-.91.583L7.175 5H4a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1V6a1 1 0 00-1-1h-3.175l-1.415-3.417zM10 12a3 3 0 100-6 3 3 0 000 6z" /><path d="M12.5 4a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /></svg>
+                    Luo suunnitelma & Analysoi
+                </button>
+             </div>
+             <p id="output-description" class="mb-6 text-gray-600">Kun olet vastannut kysymyksiin, klikkaa painiketta lähettääksesi tiedot tekoälylle. Se muodostaa niistä kokonaisen liiketoimintasuunnitelman ja luo taloudelliset kaaviot.</p>
+             <div class="bg-gray-50 p-6 rounded-md border border-gray-200 text-sm font-mono text-gray-800 overflow-x-auto min-h-[200px] whitespace-pre-wrap">
+                 <code id="final-plan-code">Täytä kentät ja paina "Luo suunnitelma & Analysoi" -painiketta.</code>
+             </div>
+        </section>
+
         <section id="financial-analysis-section" class="mt-12 p-6 md:p-8 rounded-lg content-card">
              <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
                 <h2 class="text-2xl font-bold">Taloudellinen Analyysi & Ennusteet</h2>
-                <button id="analyze-button" class="bg-[#D4A373] text-white font-bold py-2 px-6 rounded-lg hover:bg-[#c8935a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D4A373] transition duration-200 flex items-center">
-                    Analysoi & Visualisoi
-                </button>
              </div>
-             <p class="mb-8 text-gray-600">Syötä tiedot "Taloussuunnitelma"-osioon ja paina sitten "Analysoi & Visualisoi" -painiketta luodaksesi ja päivittääksesi alla olevat kaaviot.</p>
+             <p class="mb-8 text-gray-600">Nämä kaaviot perustuvat "Taloussuunnitelma"-osioon syöttämiisi lukuihin ja päivittyvät automaattisesti, kun luot liiketoimintasuunnitelman.</p>
              <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
                  <div class="p-4 rounded-lg border">
                      <h3 class="text-lg font-semibold text-center mb-4">Aloituskustannusten erittely</h3>
@@ -116,20 +127,6 @@
                      <h3 class="text-lg font-semibold text-center mb-4">12 kuukauden tuotto- ja tulosennuste</h3>
                      <div class="chart-container h-96"><canvas id="projectionChart"></canvas></div>
                  </div>
-             </div>
-        </section>
-
-        <section id="final-output-section" class="mt-12 p-6 md:p-8 rounded-lg content-card">
-             <div class="flex flex-wrap justify-between items-center gap-4 mb-4">
-                <h2 class="text-2xl font-bold">Agentin luoma liiketoimintasuunnitelma</h2>
-                <button id="ai-generate-button" class="ai-button font-bold py-2 px-6 rounded-lg flex items-center">
-                    <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M11.41 1.583A1 1 0 0010.5 1h-1a1 1 0 00-.91.583L7.175 5H4a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1V6a1 1 0 00-1-1h-3.175l-1.415-3.417zM10 12a3 3 0 100-6 3 3 0 000 6z" /><path d="M12.5 4a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /></svg>
-                    Luo suunnitelma tekoälyllä
-                </button>
-             </div>
-             <p id="output-description" class="mb-6 text-gray-600">Kun olet vastannut kysymyksiin, klikkaa painiketta lähettääksesi tiedot tekoälylle, joka muodostaa niistä kokonaisen liiketoimintasuunnitelman.</p>
-             <div class="bg-gray-50 p-6 rounded-md border border-gray-200 text-sm font-mono text-gray-800 overflow-x-auto min-h-[200px] whitespace-pre-wrap">
-                 <code id="final-plan-code">Täytä kentät ja paina "Luo suunnitelma tekoälyllä" -painiketta.</code>
              </div>
         </section>
 
@@ -187,7 +184,6 @@
         const saveAreaEl = document.getElementById('save-area');
         const finalPlanEl = document.getElementById('final-plan-code');
         const generateButton = document.getElementById('ai-generate-button');
-        const analyzeButton = document.getElementById('analyze-button');
         
         // --- Chart Rendering Functions ---
 
@@ -338,12 +334,13 @@
                 const result = await response.json();
                 const generatedText = result.candidates?.[0]?.content?.parts?.[0]?.text;
                 finalPlanEl.textContent = generatedText || 'API palautti tyhjän vastauksen.';
+                updateAllCharts(); // AUTOMATICALLY UPDATE CHARTS ON SUCCESS
             } catch (error) {
                 console.error('Error calling Gemini API:', error);
                 finalPlanEl.textContent = `Tapahtui virhe: ${error.message}`;
             } finally {
                  generateButton.disabled = false;
-                 generateButton.innerHTML = `<svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M11.41 1.583A1 1 0 0010.5 1h-1a1 1 0 00-.91.583L7.175 5H4a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1V6a1 1 0 00-1-1h-3.175l-1.415-3.417zM10 12a3 3 0 100-6 3 3 0 000 6z" /><path d="M12.5 4a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /></svg>Luo suunnitelma tekoälyllä`;
+                 generateButton.innerHTML = `<svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M11.41 1.583A1 1 0 0010.5 1h-1a1 1 0 00-.91.583L7.175 5H4a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1V6a1 1 0 00-1-1h-3.175l-1.415-3.417zM10 12a3 3 0 100-6 3 3 0 000 6z" /><path d="M12.5 4a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /></svg>Luo suunnitelma & Analysoi`;
             }
         }
 
@@ -392,7 +389,6 @@
             });
             
             if (generateButton) generateButton.addEventListener('click', callAiAgent);
-            if (analyzeButton) analyzeButton.addEventListener('click', updateAllCharts);
 
             renderContent(agentData[0].id);
             updateAllCharts();
