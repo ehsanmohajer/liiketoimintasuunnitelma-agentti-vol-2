@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktiivinen Liiketoimintasuunnitelma-Agentti</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: Sovellus on suunniteltu yksisivuiseksi, tehtäväorientoituneeksi työkaluksi. Rakenne perustuu kaksipalstaiseen asetteluun: vasemmalla on kiinteä navigointipalkki, joka toimii prosessin vaiheistuksena, ja oikealla on dynaaminen sisältöalue. Käyttäjä voi klikata vasemmanpuoleisesta valikosta haluamaansa vaihetta (esim. "Liikeidea"), jolloin kyseisen vaiheen kysymykset ja selitykset ilmestyvät oikealle. Tämä rakenne valittiin, koska se pilkkoo monivaiheisen prosessin helposti omaksuttaviin osiin ja antaa käyttäjälle selkeän kuvan kokonaisuudesta sekä vapauden tutkia osioita haluamassaan järjestyksessä. Se on staattista dokumenttia interaktiivisempi ja käyttäjäystävällisempi tapa hahmottaa agentin toimintalogiikka. -->
+    <!-- Visualization & Content Choices: Sovellus visualisoi agentin luomisprosessin ilman data-visualointeja, koska lähdemateriaali on ohjeistus. Vaiheet (Organize) -> Interaktiivinen pystysuuntainen navigointivalikko (HTML/CSS/JS) -> Klikkaus päivittää sisältönäkymän -> Perustelu: Selkeä ja intuitiivinen tapa esittää lineaarinen prosessi. Kysymykset (Inform) -> Muotoillut tekstilistat dynaamisessa sisältöalueessa (HTML/CSS) -> Perustelu: Suora ja selkeä tapa esittää agentin esittämät kysymykset. Lopputulos (Inform) -> Esimerkki muotoillusta Markdown-dokumentista (HTML pre-tag) -> Perustelu: Konkretisoi käyttäjälle, millaisen lopputuloksen agentti tuottaa. Uusi datavisualisointiosio on lisätty kvantitatiivista analyysiä varten Chart.js:llä. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #3D352E;
+        }
+        .nav-item {
+            transition: all 0.2s ease-in-out;
+            border-left: 4px solid transparent;
+        }
+        .nav-item.active {
+            background-color: #F4EFE7;
+            border-left-color: #D4A373;
+            color: #3D352E;
+            font-weight: 500;
+        }
+        .nav-item:hover {
+            background-color: #F8F5F0;
+            border-left-color: #E6CBA8;
+        }
+        .content-card {
+            background-color: #FFFFFF;
+            border: 1px solid #F0EAE2;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F8F5F0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E6CBA8;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4A373;
+        }
+        textarea {
+            resize: vertical;
+        }
+        .ai-button {
+             background-color: #3D352E;
+             color: #FDFBF8;
+        }
+        .ai-button:hover {
+            background-color: #2c2520;
+        }
+        .ai-button:disabled {
+            background-color: #9e968f;
+            cursor: not-allowed;
+        }
+        .chart-container {
+            position: relative;
+            height: 40vh;
+            width: 100%;
+            max-width: 800px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="min-h-screen container mx-auto p-4 md:p-8">
+        <header class="text-center mb-8 md:mb-12">
+            <h1 class="text-3xl md:text-4xl font-bold text-[#3D352E]">Liiketoimintasuunnitelma-Agentti</h1>
+            <p class="mt-2 text-lg text-gray-600 max-w-3xl mx-auto">Interaktiivinen työkalu liiketoimintasuunnitelman luontiin ja analysointiin.</p>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <aside class="lg:col-span-1">
+                <nav id="navigation" class="sticky top-8 bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                    <h2 class="text-lg font-semibold mb-4 px-2">Suunnitelman osiot</h2>
+                    <ul></ul>
+                </nav>
+            </aside>
+
+            <div id="main-content-area" class="lg:col-span-3">
+                <div id="content"></div>
+                <div id="save-area" class="mt-6 text-right flex items-center justify-end"></div>
+            </div>
+        </main>
+        
+        <section id="financial-analysis-section" class="mt-12 p-6 md:p-8 rounded-lg content-card">
+             <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+                <h2 class="text-2xl font-bold">Taloudellinen Analyysi & Ennusteet</h2>
+                <button id="analyze-button" class="bg-[#D4A373] text-white font-bold py-2 px-6 rounded-lg hover:bg-[#c8935a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D4A373] transition duration-200 flex items-center">
+                    Analysoi & Visualisoi
+                </button>
+             </div>
+             <p class="mb-8 text-gray-600">Syötä tiedot "Taloussuunnitelma"-osioon ja paina sitten "Analysoi & Visualisoi" -painiketta luodaksesi ja päivittääksesi alla olevat kaaviot.</p>
+             <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                 <div class="p-4 rounded-lg border">
+                     <h3 class="text-lg font-semibold text-center mb-4">Aloituskustannusten erittely</h3>
+                     <div class="chart-container h-80"><canvas id="startupCostsChart"></canvas></div>
+                 </div>
+                 <div class="p-4 rounded-lg border">
+                     <h3 class="text-lg font-semibold text-center mb-4">Kuukausittaisten kulujen analyysi</h3>
+                     <div class="chart-container h-80"><canvas id="monthlyCostsChart"></canvas></div>
+                 </div>
+                 <div class="p-4 rounded-lg border xl:col-span-2">
+                     <h3 class="text-lg font-semibold text-center mb-4">12 kuukauden tuotto- ja tulosennuste</h3>
+                     <div class="chart-container h-96"><canvas id="projectionChart"></canvas></div>
+                 </div>
+             </div>
+        </section>
+
+        <section id="final-output-section" class="mt-12 p-6 md:p-8 rounded-lg content-card">
+             <div class="flex flex-wrap justify-between items-center gap-4 mb-4">
+                <h2 class="text-2xl font-bold">Agentin luoma liiketoimintasuunnitelma</h2>
+                <button id="ai-generate-button" class="ai-button font-bold py-2 px-6 rounded-lg flex items-center">
+                    <svg class="w-5 h-5 mr-2" xmlns="http://www.w.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M11.41 1.583A1 1 0 0010.5 1h-1a1 1 0 00-.91.583L7.175 5H4a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1V6a1 1 0 00-1-1h-3.175l-1.415-3.417zM10 12a3 3 0 100-6 3 3 0 000 6z" /><path d="M12.5 4a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /></svg>
+                    Luo suunnitelma tekoälyllä
+                </button>
+             </div>
+             <p id="output-description" class="mb-6 text-gray-600">Kun olet vastannut kysymyksiin, klikkaa painiketta lähettääksesi tiedot tekoälylle, joka muodostaa niistä kokonaisen liiketoimintasuunnitelman.</p>
+             <div class="bg-gray-50 p-6 rounded-md border border-gray-200 text-sm font-mono text-gray-800 overflow-x-auto min-h-[200px] whitespace-pre-wrap">
+                 <code id="final-plan-code">Täytä kentät ja paina "Luo suunnitelma tekoälyllä" -painiketta.</code>
+             </div>
+        </section>
+
+        <footer class="text-center mt-12 py-6 border-t border-gray-200">
+            <p class="text-gray-500">Made by Witas AI Agent.</p>
+        </footer>
+    </div>
+
+    <script>
+        const agentData = [
+            // Other sections (Aloitus, Liikeidea, etc.) are omitted for brevity but should be here
+            {
+                id: 'aloitus', title: '1. Aloitus', heading: 'Tervetuloa & Aloitus', description: '...',
+                questions: [{ key: 'Liiketoiminnan tyyppi', text: 'Minkä tyyppistä liiketoimintaa suunnittelet aloittavasi?' }, { key: 'Yrityksen nimi', text: 'Mikä on yrityksesi nimi (jos sinulla on jo nimi mielessä)?' }]
+            },
+            {
+                id: 'liikeidea', title: '2. Liikeidea', heading: 'Liikeidea', description: '...',
+                questions: [{ key: 'Tuote/palvelu', text: 'Kuvaile yrityksesi tarjoamaa tuotetta tai palvelua lyhyesti.' }, { key: 'Ainutlaatuisuus', text: 'Mikä tekee tuotteestasi tai palvelustasi ainutlaatuisen?' }, { key: 'Kohderyhmä', text: 'Kenelle tuotteesi tai palvelusi on suunnattu (kohderyhmä)?' }]
+            },
+             {
+                id: 'markkina-analyysi', title: '3. Markkina-analyysi', heading: 'Markkina-analyysi', description: '...',
+                questions: [{ key: 'Kilpailijat', text: 'Ketkä ovat tärkeimmät kilpailijasi?' }, { key: 'Erottuvuustekijät', text: 'Miten yrityksesi eroaa kilpailijoista?' }, { key: 'Markkinan mahdollisuudet', text: 'Millaisia trendejä tai mahdollisuuksia markinoilla on tällä hetkellä?' }]
+            },
+            {
+                id: 'liiketoimintamalli', title: '4. Liiketoimintamalli', heading: 'Liiketoimintamalli', description: '...',
+                questions: [{ key: 'Ansaintalogiikka', text: 'Miten aiot ansaita rahaa (esim. tuotemyynti, palvelumaksu, tilausmalli)?' }, { key: 'Resurssit ja kumppanit', text: 'Millaisia keskeisiä resursseja ja kumppanuuksia tarvitset toiminnan pyörittämiseen?' }, { key: 'Toimitusprosessi', text: 'Miten tuotteen toimitus tai palvelun tuottaminen käytännössä tapahtuu?' }]
+            },
+            {
+                id: 'markkinointi', title: '5. Markkinointi ja myynti', heading: 'Markkinointi ja myynti', description: '...',
+                questions: [{ key: 'Asiakashankinta', text: 'Miten aiot tavoittaa ensimmäiset asiakkaasi?' }, { key: 'Markkinointikanavat', text: 'Mitkä markkinointikanavat ovat sinulle tärkeimpiä (esim. sosiaalinen media, verkkosivut, suosittelut)?' }, { key: 'Brändi-ilme', text: 'Millaisen mielikuvan ja viestin haluat brändillesi luoda?' }]
+            },
+            {
+                id: 'taloussuunnitelma',
+                title: '6. Taloussuunnitelma',
+                heading: 'Taloussuunnitelma',
+                description: 'Syötä tähän numeerista dataa analyysiä varten. Käytä muotoa "Kuluerä: Summa" jokaisella rivillä.',
+                questions: [
+                    { key: 'Alkupääoma', text: 'Erittele aloituskustannukset (esim. Laitteet: 5000)' },
+                    { key: 'Kiinteät kulut', text: 'Erittele kuukausittaiset kiinteät kulut (esim. Vuokra: 1500)' },
+                    { key: 'Muuttuvat kulut', text: 'Erittele arvioidut kuukausittaiset muuttuvat kulut (esim. Materiaalit: 1000)' },
+                    { key: 'Liikevaihtotavoite', text: 'Mikä on realistinen liikevaihtotavoitteesi ensimmäisen vuoden aikana? (Syötä vain numero)' }
+                ]
+            },
+            {
+                id: 'riskit', title: '7. Riskit ja varautuminen', heading: 'Riskit ja varautuminen', description: '...',
+                questions: [{ key: 'Suurimmat riskit', text: 'Mitkä ovat kolme suurinta riskiä liiketoiminnallesi?' }, { key: 'Riskienhallinta', text: 'Miten aiot hallita tai pienentää näitä riskejä?' }]
+            }
+        ];
+
+        const userAnswers = {};
+        let charts = {}; // To hold chart instances
+
+        const navigationEl = document.getElementById('navigation').querySelector('ul');
+        const contentEl = document.getElementById('content');
+        const mainContentAreaEl = document.getElementById('main-content-area');
+        const saveAreaEl = document.getElementById('save-area');
+        const finalPlanEl = document.getElementById('final-plan-code');
+        const generateButton = document.getElementById('ai-generate-button');
+        const analyzeButton = document.getElementById('analyze-button');
+        
+        // --- Chart Rendering Functions ---
+
+        function parseFinancialData(textareaContent) {
+            const lines = textareaContent.split('\n').filter(line => line.trim() !== '');
+            const data = { labels: [], values: [] };
+            let total = 0;
+            lines.forEach(line => {
+                const parts = line.split(':');
+                if (parts.length === 2) {
+                    const label = parts[0].trim();
+                    const value = parseFloat(parts[1].trim());
+                    if (label && !isNaN(value)) {
+                        data.labels.push(label);
+                        data.values.push(value);
+                        total += value;
+                    }
+                }
+            });
+            return { ...data, total };
+        }
+
+        function createOrUpdateChart(chartId, type, data, options) {
+            const ctx = document.getElementById(chartId).getContext('2d');
+            if (charts[chartId]) {
+                charts[chartId].destroy();
+            }
+            charts[chartId] = new Chart(ctx, { type, data, options });
+        }
+
+        function updateAllCharts() {
+            const financialData = userAnswers['taloussuunnitelma'] || {};
+            
+            // 1. Startup Costs Chart
+            const startupData = parseFinancialData(financialData[0] || '');
+            createOrUpdateChart('startupCostsChart', 'doughnut', {
+                labels: startupData.labels,
+                datasets: [{
+                    label: 'Aloituskustannukset',
+                    data: startupData.values,
+                    backgroundColor: ['#D4A373', '#F4EFE7', '#3D352E', '#E6CBA8', '#9B7F62'],
+                    borderColor: '#FFFFFF',
+                    borderWidth: 2
+                }]
+            }, { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } });
+
+            // 2. Monthly Costs Chart
+            const fixedCosts = parseFinancialData(financialData[1] || '');
+            const variableCosts = parseFinancialData(financialData[2] || '');
+            createOrUpdateChart('monthlyCostsChart', 'bar', {
+                labels: ['Kuukausittaiset kulut'],
+                datasets: [
+                    { label: 'Kiinteät kulut', data: [fixedCosts.total], backgroundColor: '#3D352E' },
+                    { label: 'Muuttuvat kulut', data: [variableCosts.total], backgroundColor: '#D4A373' }
+                ]
+            }, { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } } });
+
+            // 3. Projection Chart
+            const yearlyRevenueGoal = parseFloat(financialData[3] || '0');
+            const monthlyRevenue = yearlyRevenueGoal / 12;
+            const totalMonthlyCosts = fixedCosts.total + variableCosts.total;
+            
+            const projection = { labels: [], revenues: [], profits: [] };
+            for (let i = 1; i <= 12; i++) {
+                projection.labels.push(`Kuukausi ${i}`);
+                // Simple linear projection for revenue
+                const currentRevenue = (monthlyRevenue / 12) * i * 2; // Assume ramp-up
+                projection.revenues.push(currentRevenue);
+                projection.profits.push(currentRevenue - totalMonthlyCosts);
+            }
+            createOrUpdateChart('projectionChart', 'line', {
+                labels: projection.labels,
+                datasets: [
+                    { label: 'Kuukausittainen liikevaihto', data: projection.revenues, borderColor: '#D4A373', tension: 0.1, fill: false },
+                    { label: 'Kuukausittainen tulos (Voitto/Tappio)', data: projection.profits, borderColor: '#3D352E', tension: 0.1, fill: false }
+                ]
+            }, { responsive: true, maintainAspectRatio: false });
+        }
+
+        // --- Core Application Logic ---
+
+        function renderContent(sectionId) {
+            const sectionData = agentData.find(item => item.id === sectionId);
+            if (!sectionData) return;
+
+            if (!userAnswers[sectionId]) userAnswers[sectionId] = {};
+            
+            const questionsHtml = sectionData.questions.map((q, index) => {
+                const savedAnswer = userAnswers[sectionId][index] || '';
+                const isTall = sectionId === 'taloussuunnitelma';
+                return `
+                    <div class="mb-6">
+                        <label for="${sectionId}-${index}" class="block font-medium text-gray-800 mb-2">${q.text}</label>
+                        <textarea id="${sectionId}-${index}"
+                                  class="mt-1 w-full p-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-[#E6CBA8] focus:border-[#D4A373] transition ${isTall ? 'h-40' : 'h-28'}"
+                                  placeholder="${q.key === 'Liikevaihtotavoite' ? 'Esim: 120000' : 'Esim:\nLaitteet: 5000\nMarkkinointi: 2000'}">${savedAnswer}</textarea>
+                    </div>`;
+            }).join('');
+
+            contentEl.innerHTML = `
+                <div class="p-6 md:p-8 rounded-lg content-card animate-fade-in">
+                    <h2 class="text-2xl font-bold mb-2">${sectionData.heading}</h2>
+                    <p class="text-gray-600 mb-8">${sectionData.description}</p>
+                    <div class="space-y-4">${questionsHtml}</div>
+                </div>`;
+            
+            saveAreaEl.innerHTML = `
+                <span id="save-feedback-${sectionId}" class="mr-4 text-green-600 font-medium opacity-0">Tiedot tallennettu! ✔</span>
+                <button id="save-button-${sectionId}" class="bg-[#D4A373] text-white font-bold py-2 px-6 rounded-lg">
+                    Tallenna vastaukset
+                </button>`;
+        }
+        
+        async function callAiAgent() {
+            const API_KEY = 'AIzaSyAfHoww04oqEKFKL6MZjU5xTn60jMx7tnw';
+            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
+            
+            generateButton.disabled = true;
+            generateButton.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Generoidaan...`;
+            finalPlanEl.textContent = 'Lähetetään tietoja tekoälylle...';
+
+            let rawAnswersText = "";
+            agentData.forEach(section => {
+                rawAnswersText += `\n### ${section.title}\n`;
+                section.questions.forEach((question, index) => {
+                    const answer = userAnswers[section.id]?.[index] || 'Ei vastausta';
+                    rawAnswersText += `- **${question.key}:** ${answer}\n`;
+                });
+            });
+
+            const systemPrompt = "You are an expert business consultant. Your task is to create a clear, professional, and well-structured business plan based on the user's provided answers. Formulate the answers into a coherent and flowing text, not just a list of the answers. Use Markdown for formatting. The response must be in Finnish.";
+            const userPrompt = `Create a comprehensive business plan from the following raw data:\n\n${rawAnswersText}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userPrompt }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+            };
+
+            try {
+                const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                if (!response.ok) {
+                    const errorBody = await response.text();
+                    throw new Error(`API error: ${response.status} - ${errorBody}`);
+                }
+                const result = await response.json();
+                const generatedText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                finalPlanEl.textContent = generatedText || 'API palautti tyhjän vastauksen.';
+            } catch (error) {
+                console.error('Error calling Gemini API:', error);
+                finalPlanEl.textContent = `Tapahtui virhe: ${error.message}`;
+            } finally {
+                 generateButton.disabled = false;
+                 generateButton.innerHTML = `<svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M11.41 1.583A1 1 0 0010.5 1h-1a1 1 0 00-.91.583L7.175 5H4a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1V6a1 1 0 00-1-1h-3.175l-1.415-3.417zM10 12a3 3 0 100-6 3 3 0 000 6z" /><path d="M12.5 4a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /></svg>Luo suunnitelma tekoälyllä`;
+            }
+        }
+
+        function init() {
+            agentData.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="#" class="nav-item block w-full text-left px-4 py-3 rounded-md" data-id="${item.id}">${item.title}</a>`;
+                navigationEl.appendChild(li);
+            });
+
+            navigationEl.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = e.target.closest('.nav-item');
+                if (target) renderContent(target.dataset.id);
+            });
+            
+            mainContentAreaEl.addEventListener('input', (e) => {
+                if (e.target.tagName === 'TEXTAREA') {
+                    const idParts = e.target.id.split('-');
+                    const questionIndex = idParts.pop();
+                    const sectionId = idParts.join('-');
+                    if (!userAnswers[sectionId]) userAnswers[sectionId] = {};
+                    userAnswers[sectionId][questionIndex] = e.target.value;
+                }
+            });
+
+            mainContentAreaEl.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON' && e.target.id.startsWith('save-button-')) {
+                    e.preventDefault();
+                    const feedbackEl = document.getElementById(e.target.id.replace('save-button-','save-feedback-'));
+                    if (feedbackEl) {
+                        feedbackEl.classList.remove('opacity-0');
+                        setTimeout(() => feedbackEl.classList.add('opacity-0'), 2500);
+                    }
+                }
+            });
+            
+            if (generateButton) generateButton.addEventListener('click', callAiAgent);
+            if (analyzeButton) analyzeButton.addEventListener('click', updateAllCharts);
+
+            renderContent(agentData[0].id);
+            updateAllCharts();
+            
+            const style = document.createElement('style');
+            style.innerHTML = `@keyframes animate-fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } } .animate-fade-in { animation: animate-fade-in 0.5s ease-out forwards; }`;
+            document.head.appendChild(style);
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
+
