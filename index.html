@@ -140,25 +140,24 @@
 
     <script>
         const agentData = [
-            // Other sections (Aloitus, Liikeidea, etc.) are omitted for brevity but should be here
             {
-                id: 'aloitus', title: '1. Aloitus', heading: 'Tervetuloa & Aloitus', description: '...',
+                id: 'aloitus', title: '1. Aloitus', heading: 'Tervetuloa & Aloitus', description: 'Ensimmäisessä vaiheessa agentti toivottaa käyttäjän tervetulleeksi, selittää prosessin lyhyesti ja kerää perustiedot aloitettavasta liiketoiminnasta. Tämä luo pohjan koko suunnitelmalle.',
                 questions: [{ key: 'Liiketoiminnan tyyppi', text: 'Minkä tyyppistä liiketoimintaa suunnittelet aloittavasi?' }, { key: 'Yrityksen nimi', text: 'Mikä on yrityksesi nimi (jos sinulla on jo nimi mielessä)?' }]
             },
             {
-                id: 'liikeidea', title: '2. Liikeidea', heading: 'Liikeidea', description: '...',
+                id: 'liikeidea', title: '2. Liikeidea', heading: 'Liikeidea', description: 'Tässä osiossa pureudutaan ytimeen: mitä yritys myy, kenelle ja miksi se on erityinen. Agentti auttaa kirkastamaan liikeidean peruspilarit.',
                 questions: [{ key: 'Tuote/palvelu', text: 'Kuvaile yrityksesi tarjoamaa tuotetta tai palvelua lyhyesti.' }, { key: 'Ainutlaatuisuus', text: 'Mikä tekee tuotteestasi tai palvelustasi ainutlaatuisen?' }, { key: 'Kohderyhmä', text: 'Kenelle tuotteesi tai palvelusi on suunnattu (kohderyhmä)?' }]
             },
              {
-                id: 'markkina-analyysi', title: '3. Markkina-analyysi', heading: 'Markkina-analyysi', description: '...',
-                questions: [{ key: 'Kilpailijat', text: 'Ketkä ovat tärkeimmät kilpailijasi?' }, { key: 'Erottuvuustekijät', text: 'Miten yrityksesi eroaa kilpailijoista?' }, { key: 'Markkinan mahdollisuudet', text: 'Millaisia trendejä tai mahdollisuuksia markinoilla on tällä hetkellä?' }]
+                id: 'markkina-analyysi', title: '3. Markkina-analyysi', heading: 'Markkina-analyysi', description: 'Yksikään yritys ei toimi tyhjiössä. Tässä vaiheessa agentti ohjaa yrittäjää analysoimaan kilpailukenttää ja tunnistamaan markkinan mahdollisuuksia ja trendejä.',
+                questions: [{ key: 'Kilpailijat', text: 'Ketkä ovat tärkeimmät kilpailijasi?' }, { key: 'Erottuvuustekijät', text: 'Miten yrityksesi eroaa kilpailijoista?' }, { key: 'Markkinan mahdollisuudet', text: 'Millaisia trendejä tai mahdollisuuksia markkinoilla on tällä hetkellä?' }]
             },
             {
-                id: 'liiketoimintamalli', title: '4. Liiketoimintamalli', heading: 'Liiketoimintamalli', description: '...',
+                id: 'liiketoimintamalli', title: '4. Liiketoimintamalli', heading: 'Liiketoimintamalli', description: 'Miten yritys tekee rahaa ja mitä sen pyörittämiseen vaaditaan? Agentti auttaa määrittelemään ansaintalogiikan, tarvittavat resurssit ja käytännön toimintatavat.',
                 questions: [{ key: 'Ansaintalogiikka', text: 'Miten aiot ansaita rahaa (esim. tuotemyynti, palvelumaksu, tilausmalli)?' }, { key: 'Resurssit ja kumppanit', text: 'Millaisia keskeisiä resursseja ja kumppanuuksia tarvitset toiminnan pyörittämiseen?' }, { key: 'Toimitusprosessi', text: 'Miten tuotteen toimitus tai palvelun tuottaminen käytännössä tapahtuu?' }]
             },
             {
-                id: 'markkinointi', title: '5. Markkinointi ja myynti', heading: 'Markkinointi ja myynti', description: '...',
+                id: 'markkinointi', title: '5. Markkinointi ja myynti', heading: 'Markkinointi ja myynti', description: 'Loistava tuote ei myy itse itseään. Tässä osiossa agentti auttaa suunnittelemaan, miten potentiaaliset asiakkaat tavoitetaan ja miten heidät vakuutetaan.',
                 questions: [{ key: 'Asiakashankinta', text: 'Miten aiot tavoittaa ensimmäiset asiakkaasi?' }, { key: 'Markkinointikanavat', text: 'Mitkä markkinointikanavat ovat sinulle tärkeimpiä (esim. sosiaalinen media, verkkosivut, suosittelut)?' }, { key: 'Brändi-ilme', text: 'Millaisen mielikuvan ja viestin haluat brändillesi luoda?' }]
             },
             {
@@ -174,7 +173,7 @@
                 ]
             },
             {
-                id: 'riskit', title: '7. Riskit ja varautuminen', heading: 'Riskit ja varautuminen', description: '...',
+                id: 'riskit', title: '7. Riskit ja varautuminen', heading: 'Riskit ja varautuminen', description: 'Hyvään suunnitteluun kuuluu myös varautuminen vastoinkäymisiin. Viimeisessä vaiheessa agentti auttaa tunnistamaan potentiaalisia riskejä ja miettimään keinoja niiden hallintaan.',
                 questions: [{ key: 'Suurimmat riskit', text: 'Mitkä ovat kolme suurinta riskiä liiketoiminnallesi?' }, { key: 'Riskienhallinta', text: 'Miten aiot hallita tai pienentää näitä riskejä?' }]
             }
         ];
@@ -193,6 +192,7 @@
         // --- Chart Rendering Functions ---
 
         function parseFinancialData(textareaContent) {
+            if (!textareaContent) return { labels: [], values: [], total: 0 };
             const lines = textareaContent.split('\n').filter(line => line.trim() !== '');
             const data = { labels: [], values: [] };
             let total = 0;
@@ -300,6 +300,13 @@
                 <button id="save-button-${sectionId}" class="bg-[#D4A373] text-white font-bold py-2 px-6 rounded-lg">
                     Tallenna vastaukset
                 </button>`;
+            
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.id === sectionId) {
+                    item.classList.add('active');
+                }
+            });
         }
         
         async function callAiAgent() {
@@ -341,7 +348,7 @@
                 finalPlanEl.textContent = `Tapahtui virhe: ${error.message}`;
             } finally {
                  generateButton.disabled = false;
-                 generateButton.innerHTML = `<svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M11.41 1.583A1 1 0 0010.5 1h-1a1 1 0 00-.91.583L7.175 5H4a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1V6a1 1 0 00-1-1h-3.175l-1.415-3.417zM10 12a3 3 0 100-6 3 3 0 000 6z" /><path d="M12.5 4a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /></svg>Luo suunnitelma tekoälyllä`;
+                 generateButton.innerHTML = `<svg class="w-5 h-5 mr-2" xmlns="http://www.w.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M11.41 1.583A1 1 0 0010.5 1h-1a1 1 0 00-.91.583L7.175 5H4a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1V6a1 1 0 00-1-1h-3.175l-1.415-3.417zM10 12a3 3 0 100-6 3 3 0 000 6z" /><path d="M12.5 4a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /></svg>Luo suunnitelma tekoälyllä`;
             }
         }
 
