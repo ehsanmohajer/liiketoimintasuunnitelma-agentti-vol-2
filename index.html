@@ -188,24 +188,27 @@
         // --- Chart Rendering Functions ---
         function getFinancialDataFromAnswers() {
             const financialAnswers = userAnswers['taloussuunnitelma'] || {};
-            const startupDataRaw = financialAnswers[0] || [];
-            const fixedDataRaw = financialAnswers[1] || [];
-            const variableDataRaw = financialAnswers[2] || [];
-            
-            const processRawData = (rawData) => {
-                const labels = rawData.map(item => item.name || '');
-                const values = rawData.map(item => parseFloat(item.value) || 0);
-                const total = values.reduce((sum, val) => sum + val, 0);
-                return { labels, values, total };
-            };
+            const startupDataRaw   = financialAnswers["0"] || [];
+            const fixedDataRaw     = financialAnswers["1"] || [];
+            const variableDataRaw  = financialAnswers["2"] || [];
+    
+            const yearlyRevenueGoal = parseFloat(financialAnswers["3"] || '0');
 
-            return {
-                startupData: processRawData(startupDataRaw),
-                fixedCosts: processRawData(fixedDataRaw),
-                variableCosts: processRawData(variableDataRaw),
-                yearlyRevenueGoal: parseFloat(financialAnswers[3] || '0')
-            };
+            const processRawData = (rawData) => {
+            const labels = rawData.map(item => item.name || '');
+            const values = rawData.map(item => parseFloat(item.value) || 0);
+            const total = values.reduce((sum, val) => sum + val, 0);
+        return { labels, values, total };
+        };
+
+        return {
+            startupData: processRawData(startupDataRaw),
+            fixedCosts: processRawData(fixedDataRaw),
+            variableCosts: processRawData(variableDataRaw),
+            yearlyRevenueGoal
+        };
         }
+
 
         function createOrUpdateChart(chartId, type, data, options) {
             const ctx = document.getElementById(chartId)?.getContext('2d');
